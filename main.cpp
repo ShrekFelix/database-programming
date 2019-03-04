@@ -33,10 +33,12 @@ int main (int argc, char *argv[]) {
     cerr << e.what() << std::endl;
     return 1;
   }
+  /* Create a transactional object. */
+  work W(*C);
   //TODO: create PLAYER, TEAM, STATE, and COLOR tables in the ACC_BBALL database
   //      load each table with rows from the provided source txt files
   /* Create SQL statement */
-  string sql_create = " \
+  string sql = " \
     DROP TABLE IF EXIST PLAYER,\
     CREATE TABLE PLAYER(  \
       PLAYER_ID INT PRIMARY KEY NOT NULL, \
@@ -68,21 +70,19 @@ int main (int argc, char *argv[]) {
       COLOR_ID INT PRIMARY KEY NOT NULL, \
       NAME TEXT NOT NULL, \
       );";
-  string sql_insert;
+  W.exec( sql );
   ifstream fs("player.txt");
   string line;
   while(getline(fs, line)){
     replaceAll(line, " ", ",");
-    sql_insert = "\
+    sql = "\
       INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) \
       VALUES (" + line + ")";
   }
-
-  /* Create a transactional object. */
-  work W(*C);
+  W.exec( sql );
+  
   /* Execute SQL query */
-  W.exec( sql_create );
-  W.exec( sql_insert );
+  
   W.commit();
 
   exercise(C);
