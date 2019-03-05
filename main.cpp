@@ -39,42 +39,43 @@ int main (int argc, char *argv[]) {
   //      load each table with rows from the provided source txt files
   /* Create SQL statement */
   string sql = " \
-    DROP TABLE IF EXIST PLAYER,\
-    CREATE TABLE PLAYER(  \
-      PLAYER_ID INT PRIMARY KEY NOT NULL, \
-      TEAM_ID INT FOREIGN KEY NOT NULL, \
-      UNIFORM_NUM INT NOT NULL, \
-      FIRST_NAME TEXT, \
-      LAST_NAME TEXT, \
-      MPG REAL, \
-      PPG REAL, \
-      RPG REAL, \
-      APG REAL, \
-      SPG REAL, \
-      BPG REAL \
-    DROP TABLE IF EXIST TEAM, \
-    CREATE TABLE TEAM(  \
-      TEAM_ID INT PRIMARY KEY NOT NULL, \
-      NAME TEXT NOT NULL, \
-      STATE_ID INT NOT NULL, \
-      COLOR_ID INT NOT NULL, \
-      LAST_NAME CHAR(50), \
-      WINS INT, \
-      LOSSES INT, \
-    DROP TABLE IF EXIST STATE,\
-    CREATE TABLE STATE(  \
-      STATE_ID INT PRIMARY KEY NOT NULL, \
-      NAME TEXT NOT NULL, \
-    DROP TABLE IF EXIST COLOR,\
-    CREATE TABLE COLOR(  \
-      COLOR_ID INT PRIMARY KEY NOT NULL, \
-      NAME TEXT NOT NULL, \
-      );";
+    DROP TABLE IF EXISTS STATE;				\
+    CREATE TABLE STATE(					\
+      STATE_ID INT PRIMARY KEY NOT NULL,		\
+      NAME TEXT NOT NULL);				\
+    DROP TABLE IF EXISTS COLOR;				\
+    CREATE TABLE COLOR(					\
+      COLOR_ID INT PRIMARY KEY NOT NULL,		\
+      NAME TEXT NOT NULL);				\
+    DROP TABLE IF EXISTS TEAM;				\
+    CREATE TABLE TEAM(					\
+      TEAM_ID INT PRIMARY KEY NOT NULL,			\
+      NAME TEXT NOT NULL,				\
+      STATE_ID INT REFERENCES STATE(STATE_ID) NOT NULL, \
+      COLOR_ID INT REFERENCES COLOR(COLOR_ID) NOT NULL, \
+      LAST_NAME CHAR(50),				\
+      WINS INT,						\
+      LOSSES INT);					\
+    DROP TABLE IF EXISTS PLAYER;			\
+    CREATE TABLE PLAYER(				\
+      PLAYER_ID INT PRIMARY KEY NOT NULL,		\
+      TEAM_ID INT REFERENCES TEAM(TEAM_ID) NOT NULL,	\
+      UNIFORM_NUM INT NOT NULL,				\
+      FIRST_NAME TEXT,					\
+      LAST_NAME TEXT,					\
+      MPG REAL,						\
+      PPG REAL,						\
+      RPG REAL,						\
+      APG REAL,						\
+      SPG REAL,						\
+      BPG REAL);					\
+  ";
   W.exec( sql );
   ifstream fs("player.txt");
   string line;
   while(getline(fs, line)){
     replaceAll(line, " ", ",");
+    cout << line << '\n';
     sql = "\
       INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) \
       VALUES (" + line + ")";
