@@ -6,7 +6,7 @@
 using namespace std;
 using namespace pqxx;
 
-int main (int argc, char *argv[]) { 
+int main (int argc, char *argv[]) {
   //Allocate & initialize a Postgres connection object
   connection *C;
   try{
@@ -61,16 +61,16 @@ int main (int argc, char *argv[]) {
       BPG REAL);					\
   ";
   W.exec( sql );
+  
   ifstream fs("player.txt");
   string line;
-  int PLAYER_ID, TEAM_ID, UNIFORM_NUM;
-  string FIRST_NAME, LAST_NAME;
-  float MPG, PPG, RPG, APG, SPG, BPG;
+  string PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG;
   while(fs >> PLAYER_ID >> TEAM_ID >> UNIFORM_NUM >> FIRST_NAME >> LAST_NAME >> MPG >> PPG >> RPG >> APG >> SPG >> BPG){
     sql = "\
       INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) \
       VALUES (" + PLAYER_ID + "," + TEAM_ID + "," + UNIFORM_NUM + "," + "'" + FIRST_NAME + "'," + "'" + LAST_NAME + "'," + MPG + "," + PPG + "," + RPG + "," + APG + "," + SPG + "," + BPG + ")";
-  W.exec( sql );
+    W.exec( sql );
+  }
   
   /* Execute SQL query */
   
