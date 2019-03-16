@@ -43,7 +43,6 @@ int main (int argc, char *argv[]) {
       NAME TEXT NOT NULL,				\
       STATE_ID INT REFERENCES STATE(STATE_ID) NOT NULL, \
       COLOR_ID INT REFERENCES COLOR(COLOR_ID) NOT NULL, \
-      LAST_NAME CHAR(50),				\
       WINS INT,						\
       LOSSES INT);					\
     DROP TABLE IF EXISTS PLAYER;			\
@@ -62,13 +61,39 @@ int main (int argc, char *argv[]) {
   ";
   W.exec( sql );
   
-  ifstream fs("player.txt");
-  string line;
-  string PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG;
-  while(fs >> PLAYER_ID >> TEAM_ID >> UNIFORM_NUM >> FIRST_NAME >> LAST_NAME >> MPG >> PPG >> RPG >> APG >> SPG >> BPG){
+  ifstream fs("state.txt");
+  string s1, s2;
+  while(fs >> s1 >> s2){
     sql = "\
-      INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) \
-      VALUES (" + PLAYER_ID + "," + TEAM_ID + "," + UNIFORM_NUM + "," + "'" + FIRST_NAME + "'," + "'" + LAST_NAME + "'," + MPG + "," + PPG + "," + RPG + "," + APG + "," + SPG + "," + BPG + ")";
+      INSERT INTO STATE \
+      VALUES (" + s1 + ",'" + s2 + "')";
+    W.exec( sql );
+  }
+
+  ifstream fs("color.txt");
+  string c1,c2;
+  while(fs >> c1 >> c2){
+    sql = "\
+      INSERT INTO COLOR \
+      VALUES (" + c1 + ",'" + c2 + "')";
+    W.exec( sql );
+  }
+
+  ifstream fs("team.txt");
+  string t1,t2,t3,t4,t5,t6;
+  while(fs >> t1 >> t2 >> t3 >> t4 >> t5 >> t6){
+    sql = "\
+      INSERT INTO TEAM \
+      VALUES (" + t1 + ",'" + t2 + "'," + t3 + t4 + t5 + t6 + ")";
+    W.exec( sql );
+  }
+
+  ifstream fs("player.txt");
+  string p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11;
+  while(fs >> p1 >> p2 >> p3 >> p4 >> p5 >> p6 >> p7 >> p8 >> p9 >> p10 >> p11){
+    sql = "\
+      INSERT INTO PLAYER \
+      VALUES (" + p1 + "," + p2 + "," + p3 + ",'" + p4 + "','" + p5 + "'," + p6 + "," + p7 + "," + p8 + "," + p9 + "," + p10 + "," + p11 + ")";
     W.exec( sql );
   }
   
