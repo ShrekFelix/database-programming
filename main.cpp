@@ -6,16 +6,6 @@
 using namespace std;
 using namespace pqxx;
 
-void replaceAll(std::string& str, const std::string& from, const std::string& to) {
-    if(from.empty())
-        return;
-    size_t start_pos = 0;
-    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-        str.replace(start_pos, from.length(), to);
-        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
-    }
-}
-
 int main (int argc, char *argv[]) { 
   //Allocate & initialize a Postgres connection object
   connection *C;
@@ -73,13 +63,13 @@ int main (int argc, char *argv[]) {
   W.exec( sql );
   ifstream fs("player.txt");
   string line;
-  while(getline(fs, line)){
-    replaceAll(line, " ", ",");
-    cout << line << '\n';
+  int PLAYER_ID, TEAM_ID, UNIFORM_NUM;
+  string FIRST_NAME, LAST_NAME;
+  float MPG, PPG, RPG, APG, SPG, BPG;
+  while(fs >> PLAYER_ID >> TEAM_ID >> UNIFORM_NUM >> FIRST_NAME >> LAST_NAME >> MPG >> PPG >> RPG >> APG >> SPG >> BPG){
     sql = "\
       INSERT INTO PLAYER (PLAYER_ID, TEAM_ID, UNIFORM_NUM, FIRST_NAME, LAST_NAME, MPG, PPG, RPG, APG, SPG, BPG) \
-      VALUES (" + line + ")";
-  }
+      VALUES (" + PLAYER_ID + "," + TEAM_ID + "," + UNIFORM_NUM + "," + "'" + FIRST_NAME + "'," + "'" + LAST_NAME + "'," + MPG + "," + PPG + "," + RPG + "," + APG + "," + SPG + "," + BPG + ")";
   W.exec( sql );
   
   /* Execute SQL query */
