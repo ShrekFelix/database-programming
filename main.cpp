@@ -48,15 +48,15 @@ int main (int argc, char *argv[]) {
   //      load each table with rows from the provided source txt files
   /* Create SQL statement */
   string sql = " \
-    DROP TABLE IF EXISTS STATE;				\
+    DROP TABLE IF EXISTS STATE CASCADE;				\
     CREATE TABLE STATE(					\
       STATE_ID INT PRIMARY KEY NOT NULL,		\
       NAME TEXT NOT NULL);				\
-    DROP TABLE IF EXISTS COLOR;				\
+    DROP TABLE IF EXISTS COLOR CASCADE;				\
     CREATE TABLE COLOR(					\
       COLOR_ID INT PRIMARY KEY NOT NULL,		\
       NAME TEXT NOT NULL);				\
-    DROP TABLE IF EXISTS TEAM;				\
+    DROP TABLE IF EXISTS TEAM CASCADE;				\
     CREATE TABLE TEAM(					\
       TEAM_ID INT PRIMARY KEY NOT NULL,			\
       NAME TEXT NOT NULL,				\
@@ -64,7 +64,7 @@ int main (int argc, char *argv[]) {
       COLOR_ID INT REFERENCES COLOR(COLOR_ID) NOT NULL, \
       WINS INT,						\
       LOSSES INT);					\
-    DROP TABLE IF EXISTS PLAYER;			\
+    DROP TABLE IF EXISTS PLAYER CASCADE;			\
     CREATE TABLE PLAYER(				\
       PLAYER_ID INT PRIMARY KEY NOT NULL,		\
       TEAM_ID INT REFERENCES TEAM(TEAM_ID) NOT NULL,	\
@@ -108,7 +108,6 @@ int main (int argc, char *argv[]) {
     sql = "\
       INSERT INTO TEAM \
       VALUES (" + t1 + "," + procStr(t2) + "," + t3 + "," + t4 + "," + t5 + "," + t6 + ")";
-    cout << sql << '\n';
     W.exec( sql );
   }
   fs.close();
