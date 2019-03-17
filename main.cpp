@@ -6,6 +6,25 @@
 using namespace std;
 using namespace pqxx;
 
+void replaceAll(std::string& str, const std::string& from, const std::string& to) {
+    if(from.empty())
+        return;
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+    }
+}
+
+string addQuote(string s){
+  return "'" + s + "'";
+}
+
+string procStr(string s){
+  replaceAll(s, "'", "''");
+  return addQuote(s);
+}
+
 int main (int argc, char *argv[]) {
   //Allocate & initialize a Postgres connection object
   connection *C;
@@ -66,7 +85,7 @@ int main (int argc, char *argv[]) {
   while(fs >> s1 >> s2){
     sql = "\
       INSERT INTO STATE \
-      VALUES (" + s1 + ",'" + s2 + "')";
+      VALUES (" + s1 + "," + procStr(s2) + ")";
     W.exec( sql );
   }
 
@@ -75,7 +94,7 @@ int main (int argc, char *argv[]) {
   while(fs >> c1 >> c2){
     sql = "\
       INSERT INTO COLOR \
-      VALUES (" + c1 + ",'" + c2 + "')";
+      VALUES (" + c1 + "," + procStr(c2) + ")";
     W.exec( sql );
   }
 
@@ -84,7 +103,7 @@ int main (int argc, char *argv[]) {
   while(fs >> t1 >> t2 >> t3 >> t4 >> t5 >> t6){
     sql = "\
       INSERT INTO TEAM \
-      VALUES (" + t1 + ",'" + t2 + "'," + t3 + t4 + t5 + t6 + ")";
+      VALUES (" + t1 + "," + procStr(t2) + "," + t3 + t4 + t5 + t6 + ")";
     W.exec( sql );
   }
 
@@ -93,7 +112,7 @@ int main (int argc, char *argv[]) {
   while(fs >> p1 >> p2 >> p3 >> p4 >> p5 >> p6 >> p7 >> p8 >> p9 >> p10 >> p11){
     sql = "\
       INSERT INTO PLAYER \
-      VALUES (" + p1 + "," + p2 + "," + p3 + ",'" + p4 + "','" + p5 + "'," + p6 + "," + p7 + "," + p8 + "," + p9 + "," + p10 + "," + p11 + ")";
+      VALUES (" + p1 + "," + p2 + "," + p3 + "," + procStr(p4) + "," + procStr(p5) + "," + p6 + "," + p7 + "," + p8 + "," + p9 + "," + p10 + "," + p11 + ")";
     W.exec( sql );
   }
   
