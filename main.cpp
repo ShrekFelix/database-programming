@@ -61,42 +61,51 @@ int main (int argc, char *argv[]) {
   ";
   W.exec( sql );
   
-  ifstream fs("state.txt");
+  ifstream fs;
+  
+  fs.open("state.txt");
   string s1, s2;
   while(fs >> s1 >> s2){
     sql = "\
       INSERT INTO STATE \
       VALUES (" + s1 + ",'" + s2 + "')";
+    cout << sql << '\n';
     W.exec( sql );
   }
-
-  ifstream fs("color.txt");
+  fs.close();
+  
+  fs.open("color.txt");
   string c1,c2;
   while(fs >> c1 >> c2){
     sql = "\
       INSERT INTO COLOR \
       VALUES (" + c1 + ",'" + c2 + "')";
+    cout << sql << '\n';
     W.exec( sql );
   }
-
-  ifstream fs("team.txt");
+  fs.close();
+  
+  fs.open("team.txt");
   string t1,t2,t3,t4,t5,t6;
   while(fs >> t1 >> t2 >> t3 >> t4 >> t5 >> t6){
     sql = "\
       INSERT INTO TEAM \
-      VALUES (" + t1 + ",'" + t2 + "'," + t3 + t4 + t5 + t6 + ")";
+      VALUES (" + t1 + ",'" + t2 + "'," + t3 + "," + t4 + "," + t5 + "," + t6 + ")";
+    cout << sql << '\n';
     W.exec( sql );
   }
-
-  ifstream fs("player.txt");
+  fs.close();
+  
+  fs.open("player.txt");
   string p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11;
   while(fs >> p1 >> p2 >> p3 >> p4 >> p5 >> p6 >> p7 >> p8 >> p9 >> p10 >> p11){
     sql = "\
       INSERT INTO PLAYER \
       VALUES (" + p1 + "," + p2 + "," + p3 + ",'" + p4 + "','" + p5 + "'," + p6 + "," + p7 + "," + p8 + "," + p9 + "," + p10 + "," + p11 + ")";
+    cout << sql << '\n';
     W.exec( sql );
   }
-  
+  fs.close();
   /* Execute SQL query */
   
   W.commit();
