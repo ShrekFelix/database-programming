@@ -8,6 +8,9 @@ using namespace pqxx;
 #ifndef _QUERY_FUNCS_
 #define _QUERY_FUNCS_
 
+string addQuote(string s);
+string procStr(string s);
+
 void add_player(connection *C, int team_id, int jersey_num, string first_name, string last_name,
 		int mpg, int ppg, int rpg, int apg, double spg, double bpg);
 

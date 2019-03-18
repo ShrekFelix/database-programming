@@ -127,7 +127,6 @@ int main (int argc, char *argv[]) {
 
   exercise(C);
 
-
   //Close database connection
   C->disconnect();
 

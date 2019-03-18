@@ -1,24 +1,13 @@
 #include "query_funcs.h"
 
-using namespace std;
-
 void add_player(connection *C, int team_id, int jersey_num, string first_name, string last_name,
                 int mpg, int ppg, int rpg, int apg, double spg, double bpg){
 }
-
-
 void add_team(connection *C, string name, int state_id, int color_id, int wins, int losses){
-
 }
-
-
 void add_state(connection *C, string name){
-
 }
-
-
 void add_color(connection *C, string name){
-
 }
 /*
 Each query function should print its output. The format of this
@@ -43,23 +32,24 @@ void query1(connection *C,
     work W(*C);
     string sql = "SELECT * FROM PLAYER WHERE PLAYER_ID > 0";
     if(use_mpg){
-        sql += "AND MPG <=" + to_string(max_mpg) + "AND MPG >=" + to_string(min_mpg) + ";";
+        sql += " AND MPG <=" + to_string(max_mpg) + " AND MPG >=" + to_string(min_mpg);
     }
     if(use_ppg){
-        sql += "AND PPG <=" + to_string(max_ppg) + "AND PPG >=" + to_string(min_ppg) + ";";
+        sql += " AND PPG <=" + to_string(max_ppg) + " AND PPG >=" + to_string(min_ppg);
     }
     if(use_rpg){
-        sql += "AND RPG <=" + to_string(max_rpg) + "AND RPG >=" + to_string(min_rpg) + ";";
+        sql += " AND RPG <=" + to_string(max_rpg) + " AND RPG >=" + to_string(min_rpg);
     }
     if(use_apg){
-        sql += "AND APG <=" + to_string(max_apg) + "AND APG >=" + to_string(min_apg) + ";";
+        sql += " AND APG <=" + to_string(max_apg) + " AND APG >=" + to_string(min_apg);
     }
     if(use_spg){
-        sql += "AND SPG <=" + to_string(max_spg) + "AND SPG >=" + to_string(min_spg) + ";";
+        sql += " AND SPG <=" + to_string(max_spg) + " AND SPG >=" + to_string(min_spg);
     }
     if(use_bpg){
-        sql += "AND BPG <=" + to_string(max_bpg) + "AND BPG >=" + to_string(min_bpg) + ";";
+        sql += " AND BPG <=" + to_string(max_bpg) + " AND BPG >=" + to_string(min_bpg);
     }
+    sql += ";";
     result r = W.exec(sql);
     W.commit();
     cout << "PLAYER_ID TEAM_ID UNIFORM_NUM FIRST_NAME LAST_NAME MPG PPG RPG APG SPG BPG\n";
@@ -77,7 +67,7 @@ show the name of each team with the indicated uniform color
 */
 void query2(connection *C, string team_color){
     work W(*C);
-    string sql="SELECT T.NAME FROM TEAM AS T, COLOR AS C WHERE T.COLOR_ID=C.COLOR_ID AND C.NAME= " + team_color + " ;";
+    string sql="SELECT T.NAME FROM TEAM AS T, COLOR AS C WHERE T.COLOR_ID=C.COLOR_ID AND C.NAME= " + procStr(team_color) + " ;";
     result r = W.exec(sql);
     W.commit();
     cout << "NAME\n";
@@ -97,8 +87,8 @@ void query3(connection *C, string team_name){
     work W(*C);
     string sql="\
         SELECT P.FIRST_NAME, P.LAST_NAME \
-        FROM PLAYERS AS P,TEAM AS T \
-        WHERE P.TEAM_ID=T.TEAM_ID AND T.NAME= "+team_name+\
+        FROM PLAYER AS P,TEAM AS T \
+        WHERE P.TEAM_ID=T.TEAM_ID AND T.NAME= "+procStr(team_name)+\
         " ORDER BY P.PPG DESC;";
     result r = W.exec(sql);
     W.commit();
@@ -119,8 +109,8 @@ void query4(connection *C, string team_state, string team_color){
     work W(*C);
     string sql="\
     SELECT P.FIRST_NAME, P.LAST_NAME, P.UNIFORM_NUM \
-    FROM PLAYERS AS P,STATE AS S,TEAM AS T,COLOR AS C \
-    WHERE P.TEAM_ID=T.TEAM_ID AND T.STATE_ID=S.STATE_ID AND S.NAME="+team_state+" AND T.COLOR_ID=C.COLOR_ID AND C.NAME="+ team_color +";";
+    FROM PLAYER AS P,STATE AS S,TEAM AS T,COLOR AS C \
+    WHERE P.TEAM_ID=T.TEAM_ID AND T.STATE_ID=S.STATE_ID AND S.NAME="+procStr(team_state)+" AND T.COLOR_ID=C.COLOR_ID AND C.NAME="+ procStr(team_color) +";";
     result r = W.exec(sql);
     W.commit();
     cout<<"FIRST_NAME LAST_NAME UNIFORM_NUM\n";
@@ -141,7 +131,7 @@ void query5(connection *C, int num_wins){
     work W(*C);
     string sql="\
     SELECT P.FIRST_NAME, P.LAST_NAME, T.NAME, T.WINS \
-    FROM PLAYERS AS P,TEAM AS T \
+    FROM PLAYER AS P,TEAM AS T \
     WHERE P.TEAM_ID=T.TEAM_ID AND T.WINS>"+ to_string(num_wins) + " ;";
     result r = W.exec(sql);
     W.commit();
